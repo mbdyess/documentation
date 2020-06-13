@@ -111,6 +111,35 @@ A green notification saying “Datasource updated” should now be visible on th
 
 4. Click **Send Test**, which will push a confirmation message to the Discord channel.
 
+### Option 3: Email
+
+This example is for sending alerts via a gmail account, but it can be lightly modified to work with any SMTP server (just change host/port).  PLEASE consider creating a new email account for setting this up, as it will be necessary to allow Grafana, a third party (i.e. less secure) entity, to access/send emails from this account.
+
+Use a text editor to open the grafana.ini configuration file (/etc/grafana/) and search for 'SMTP'.  Use the example below to modify your config file (make sure to uncomment modified lines by removing the semicolon (;))
+
+```
+#################################### SMTP / Emailing ##########################
+[smtp]
+enabled = true
+host = smtp.gmail.com:465 
+user = yourusername@gmail.com
+# If the password contains # or ; you have to wrap it with triple quotes. Ex """#password;"""
+password = password1234
+;cert_file =
+;key_file =
+skip_verify = true
+from_address = yourusername@gmail.com
+from_name = Grafana
+
+...
+...
+
+#######
+```
+After you've edited grafana.ini, restart the grafana server with 'systemctl restart grafana-server' to enable the changes you've made.
+
+In Grafana, under the Alerting > Notification Channels tab, add a new channel of type 'Email'.  Under the Email Settings section, you can list any email addresses that you want to send notifications to.  Use semicolons to separate multiple addresses (email1@gmail.com; email2@gmail.com).  Click the 'Send Test' button to send a test email.  If it doesn't work at first (Grafana displays an error), you may need to go into the email account you used in the config file and adjust your Security settings to enable 'Third Party Access'.
+
 ## Creating and importing dashboards
 
 1. The dashboard can now be customised to the users preferences. There are two examples that can be used:
